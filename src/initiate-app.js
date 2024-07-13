@@ -11,6 +11,7 @@ export const initiateApp = (app, express) => {
 
   app.use("/users", routers.userRouter);
   app.use("/categories", routers.categoryRouter);
+  app.use("/tasks", routers.tasksRouter);
 
   app.use("*", (req, res, next) => {
     res.status(404).json({ message: "Not Found" });

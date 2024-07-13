@@ -16,3 +16,8 @@ export const updateCategorySchema = {
   params: Joi.object({ categoryId: generalRules.dbId }),
   headers: generalRules.headersRules,
 };
+
+export const deleteCategorySchema = {
+  headers: generalRules.headersRules,
+  params: Joi.object({ categoryId: generalRules.dbId }),
+};

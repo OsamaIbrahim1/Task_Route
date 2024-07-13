@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateCategory = exports.addCategory = void 0;
+exports.getAllCategories = exports.deleteCategory = exports.updateCategory = exports.addCategory = void 0;
 
 var _slugify = _interopRequireDefault(require("slugify"));
 
@@ -13,7 +13,13 @@ var _cloudinary = _interopRequireDefault(require("../../utils/cloudinary.js"));
 
 var _generateUniqueString = _interopRequireDefault(require("../../utils/generate-Unique-String.js"));
 
+var _apiFeatures = require("../../utils/api-features.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 //================================ add category ================================//
 
@@ -274,6 +280,110 @@ var updateCategory = function updateCategory(req, res, next) {
       }
     }
   });
-};
+}; //==================================== delete category ================================//
+
+/**
+ * * destructuring the data from the request body and authUser
+ * * check if category exists and delete it
+ * * delete the image and folder from cloudinary
+ * * success response
+ */
+
 
 exports.updateCategory = updateCategory;
+
+var deleteCategory = function deleteCategory(req, res, next) {
+  var _id, categoryId, category;
+
+  return regeneratorRuntime.async(function deleteCategory$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          // * destructuring the data from the request body and authUser
+          _id = req.authUser._id;
+          categoryId = req.params.categoryId; // * check if category exists and delete it
+
+          _context3.next = 4;
+          return regeneratorRuntime.awrap(_CategoryModel["default"].findOneAndDelete({
+            _id: categoryId,
+            addedBy: _id
+          }));
+
+        case 4:
+          category = _context3.sent;
+
+          if (category) {
+            _context3.next = 7;
+            break;
+          }
+
+          return _context3.abrupt("return", next(new Error("Category not found", {
+            cause: 404
+          })));
+
+        case 7:
+          _context3.next = 9;
+          return regeneratorRuntime.awrap((0, _cloudinary["default"])().api.delete_resources_by_prefix("".concat(process.env.MAIN_FOLDER, "/Categories/").concat(category.folderId)));
+
+        case 9:
+          _context3.next = 11;
+          return regeneratorRuntime.awrap((0, _cloudinary["default"])().api.delete_folder("".concat(process.env.MAIN_FOLDER, "/Categories/").concat(category.folderId)));
+
+        case 11:
+          // * success response
+          res.status(200).json({
+            message: "Category deleted successfully",
+            category: category
+          });
+
+        case 12:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+}; // ===================================== get all categories ================================//
+
+/**
+ * * get all categories
+ * * get all categories
+ * * success response
+ */
+
+
+exports.deleteCategory = deleteCategory;
+
+var getAllCategories = function getAllCategories(req, res, next) {
+  var _req$query, page, size, sort, search, features, categories;
+
+  return regeneratorRuntime.async(function getAllCategories$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          // * destructuring data from query
+          _req$query = req.query, page = _req$query.page, size = _req$query.size, sort = _req$query.sort, search = _objectWithoutProperties(_req$query, ["page", "size", "sort"]); // * get all categories
+
+          features = new _apiFeatures.APIFeature(req.query, _CategoryModel["default"].find()).pagination({
+            page: page,
+            size: size
+          }).sort(sort);
+          _context4.next = 4;
+          return regeneratorRuntime.awrap(features.mongooseQuery);
+
+        case 4:
+          categories = _context4.sent;
+          // * success response
+          res.status(200).json({
+            success: true,
+            data: categories
+          });
+
+        case 6:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  });
+};
+
+exports.getAllCategories = getAllCategories;

@@ -2,6 +2,7 @@ import slugify from "slugify";
 import Category from "../../../DB/models/Category.model.js";
 import cloudinaryConnection from "../../utils/cloudinary.js";
 import generateUniqueString from "../../utils/generate-Unique-String.js";
+import { APIFeature } from "../../utils/api-features.js";
 
 //================================ add category ================================//
 /**
@@ -145,4 +146,61 @@ export const updateCategory = async (req, res, next) => {
   res
     .status(200)
     .json({ success: true, message: "Successfully updated", category });
+};
+
+//==================================== delete category ================================//
+/**
+ * * destructuring the data from the request body and authUser
+ * * check if category exists and delete it
+ * * delete the image and folder from cloudinary
+ * * success response
+ */
+export const deleteCategory = async (req, res, next) => {
+  // * destructuring the data from the request body and authUser
+  const { _id } = req.authUser;
+  const { categoryId } = req.params;
+
+  // * check if category exists and delete it
+  const category = await Category.findOneAndDelete({
+    _id: categoryId,
+    addedBy: _id,
+  });
+  if (!category) {
+    return next(new Error(`Category not found`, { cause: 404 }));
+  }
+
+  // * delete the image and folder from cloudinary
+  await cloudinaryConnection().api.delete_resources_by_prefix(
+    `${process.env.MAIN_FOLDER}/Categories/${category.folderId}`
+  );
+  await cloudinaryConnection().api.delete_folder(
+    `${process.env.MAIN_FOLDER}/Categories/${category.folderId}`
+  );
+
+  // * success response
+  res.status(200).json({ message: "Category deleted successfully", category });
+};
+
+// ===================================== get all categories ================================//
+/**
+ * * get all categories
+ * * get all categories
+ * * success response
+ */
+export const getAllCategories = async (req, res, next) => {
+  // * destructuring data from query
+  const { page, size, sort, ...search } = req.query;
+
+  // * get all categories
+  const features = new APIFeature(req.query, Category.find())
+    .pagination({
+      page,
+      size,
+    })
+    .sort(sort);
+
+  const categories = await features.mongooseQuery;
+
+  // * success response
+  res.status(200).json({ success: true, data: categories });
 };

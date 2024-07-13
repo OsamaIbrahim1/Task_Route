@@ -1,0 +1,369 @@
+{
+	"info": {
+		"_postman_id": "bed77e34-865a-4894-b7c7-8fa589213cfe",
+		"name": "Task Route",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28386742"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Sign Up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"osama\",\r\n    \"email\":\"oi5921435@gmail.com\",\r\n    \"password\":\"osama12!@#\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/signUp",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"signUp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"oi5921435@gmail.com\",\r\n    \"password\": \"osama12!@#\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/users/signin",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "add Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accesstoken",
+								"value": "accesstoken_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTE2YTJmNDRjMDEzY2Y4ZjQ4MzdlMSIsImlhdCI6MTcyMDgzOTMzOCwiZXhwIjoxNzIwOTI1NzM4fQ.MVqMgCuoVuOR6S6rNmDz-M2dPviJpuf1zLAXu0OFgx4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "os oo",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/hp/Pictures/Screenshots/osama.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/categories/addCategory",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"addCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accesstoken",
+								"value": "accesstoken_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTE2YTJmNDRjMDEzY2Y4ZjQ4MzdlMSIsImlhdCI6MTcyMDgzOTMzOCwiZXhwIjoxNzIwOTI1NzM4fQ.MVqMgCuoVuOR6S6rNmDz-M2dPviJpuf1zLAXu0OFgx4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/hp/Pictures/Screenshots/Screenshot (69).png"
+								},
+								{
+									"key": "oldPublicId",
+									"value": "Task_Route/Categories/b433/wriv9rs5w86ktclrrgxz",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/categories/updateCategory/6691efb60df49329ef9f3063",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"updateCategory",
+								"6691efb60df49329ef9f3063"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accesstoken",
+								"value": "accesstoken_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTE2YTJmNDRjMDEzY2Y4ZjQ4MzdlMSIsImlhdCI6MTcyMDgzOTMzOCwiZXhwIjoxNzIwOTI1NzM4fQ.MVqMgCuoVuOR6S6rNmDz-M2dPviJpuf1zLAXu0OFgx4",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/categories/deleteCategory/6691efb60df49329ef9f3063",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"deleteCategory",
+								"6691efb60df49329ef9f3063"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/categories/getAllCategories?size=2&page=1&sort=name asc",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"categories",
+								"getAllCategories"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "sort",
+									"value": "name asc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task",
+			"item": [
+				{
+					"name": "add task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accesstoken",
+								"value": "accesstoken_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTE2YTJmNDRjMDEzY2Y4ZjQ4MzdlMSIsImlhdCI6MTcyMDg2ODkzNiwiZXhwIjoxNzIwOTU1MzM2fQ.4SLraS4QAsTCoy-zlc4CjKC285R_TTST_ScJxIIaGPo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"task 1\",\r\n    // \"description\": \"1- osama, 2- omar, 3-zyad\",\r\n    \"listTasks\": [\r\n        {\r\n            \"name\": \"osososososs\",\r\n            \"status\": \"private\",\r\n            \"description\": \"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\",\r\n            \"categoryId\": \"6691f4895fc80a16650e53a8\"\r\n        },\r\n        {\r\n            \"name\": \"osososososs\",\r\n            \"status\": \"private\",\r\n            \"description\": \"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\",\r\n            \"categoryId\": \"6691f4895fc80a16650e53a8\"\r\n        },\r\n        {\r\n            \"name\": \"osososososs\",\r\n            \"status\": \"private\",\r\n            \"description\": \"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\",\r\n            \"categoryId\": \"6691f4895fc80a16650e53a8\"\r\n        }\r\n    ],\r\n    \"status\": \"shared\",\r\n    \"categoryId\": \"6691f4895fc80a16650e53a8\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/tasks/addTask",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks",
+								"addTask"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete task",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accesstoken",
+								"value": "accesstoken_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTE2YTJmNDRjMDEzY2Y4ZjQ4MzdlMSIsImlhdCI6MTcyMDg2ODkzNiwiZXhwIjoxNzIwOTU1MzM2fQ.4SLraS4QAsTCoy-zlc4CjKC285R_TTST_ScJxIIaGPo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/tasks/deleteTask/669269b8cb4095ddce8cba4d",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks",
+								"deleteTask",
+								"669269b8cb4095ddce8cba4d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update task",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accesstoken",
+								"value": "accesstoken_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2OTE2YTJmNDRjMDEzY2Y4ZjQ4MzdlMSIsImlhdCI6MTcyMDg2ODkzNiwiZXhwIjoxNzIwOTU1MzM2fQ.4SLraS4QAsTCoy-zlc4CjKC285R_TTST_ScJxIIaGPo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"task\",\r\n    // \"description\": \"1- osama, 2- omar,444444444444\",\r\n    \"listTasks\": [\r\n        {\r\n            \"name\": \"bbbbbbb\",\r\n            \"status\": \"shared\",\r\n            \"description\": \"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\",\r\n            \"categoryId\": \"6691f4895fc80a16650e53a8\"\r\n        },\r\n        {\r\n            \"name\": \"osososososs\",\r\n            \"status\": \"shared\",\r\n            \"description\": \"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\",\r\n            \"categoryId\": \"6691f4895fc80a16650e53a8\"\r\n        }\r\n    ],\r\n    \"status\": \"shared\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/tasks/updateTask/66926992cb4095ddce8cba46",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks",
+								"updateTask",
+								"66926992cb4095ddce8cba46"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Task By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/tasks/getTaskById/66926992cb4095ddce8cba46",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks",
+								"getTaskById",
+								"66926992cb4095ddce8cba46"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get All Tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/tasks/getAllTasks?page=1&size=2&sort=name asc",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tasks",
+								"getAllTasks"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "2"
+								},
+								{
+									"key": "sort",
+									"value": "name asc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
