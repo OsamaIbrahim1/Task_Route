@@ -30,6 +30,7 @@ export const addTask = async (req, res, next) => {
     categoryId,
     addedBy: _id,
   };
+
   // * create a new task
   const task = await Task.create(objTask);
   if (!task) return next(new Error(`Task not created`, { cause: 404 }));
@@ -95,13 +96,15 @@ export const updateTask = async (req, res, next) => {
   if (status) task.status = status;
 
   // * if user want to update the description
-  if (task.description) {
-    if (description) task.description = description;
+  if (description) {
+    task.description = description;
+    await Task.updateOne({ _id: task._id }, { $unset: { listTasks: "" } });
   }
 
   // * if user want to update the listTasks
-  if (task.listTasks) {
-    if (listTasks) task.listTasks = listTasks;
+  if (listTasks) {
+    task.listTasks = listTasks;
+    await Task.updateOne({ _id: task._id }, { $unset: { description: "" } });
   }
 
   // * save the updated task
@@ -173,7 +176,7 @@ export const getTaskById = async (req, res, next) => {
 
   // * get the task by id
   const task = await Task.findOne({ _id: taskId, status: "shared" });
-  if (task.length === 0) {
+  if (!task) {
     return next(new Error(`Task not found`, { cause: 404 }));
   }
 

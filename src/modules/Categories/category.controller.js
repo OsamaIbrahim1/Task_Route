@@ -1,15 +1,13 @@
 import slugify from "slugify";
 import Category from "../../../DB/models/Category.model.js";
-import cloudinaryConnection from "../../utils/cloudinary.js";
-import generateUniqueString from "../../utils/generate-Unique-String.js";
 import { APIFeature } from "../../utils/api-features.js";
+import Task from "../../../DB/models/Task.model.js";
 
 //================================ add category ================================//
 /**
  * * detructure the required data from request body and request headers
  * * check in name is duplicated
  * * generate the slug
- * * upload image category
  * * generate the category object
  * * create the category document
  * * response successfully created
@@ -28,25 +26,10 @@ export const addCategory = async (req, res, next) => {
   const slug = slugify(name, "-");
   if (!slug) return next(new Error("slug not created", { cause: 400 }));
 
-  // * upload image category to cloudinary
-  if (!req.file) return next({ cause: 400, message: "Image is required" });
-
-  const folderId = generateUniqueString(4);
-
-  const { secure_url, public_id } =
-    await cloudinaryConnection().uploader.upload(req.file.path, {
-      folder: `${process.env.MAIN_FOLDER}/Categories/${folderId}`,
-    });
-
-  // * rollback if event any error
-  req.folder = `${process.env.MAIN_FOLDER}/Categories/${folderId}`;
-
   // * generate the category object
   const category = {
     name,
     slug,
-    Image: { secure_url, public_id },
-    folderId,
     addedBy: _id,
   };
 
@@ -64,7 +47,7 @@ export const addCategory = async (req, res, next) => {
 
 //================================ update category ================================//
 /**
- * * destructure name and oldPublicId from the request body
+ * * destructure name from the request body
  * * destructure category id from the request params
  * * destructure _id from the request authUser
  * * check if category exists
@@ -72,15 +55,13 @@ export const addCategory = async (req, res, next) => {
  * * check if new name === old name
  * * check if new name not already existing
  * * update name and slug category
- * * check if user wants to update image
- * * update image and use same public id  and folder id
  * * set value for the updatedBy
  * * save values
  * * success response
  */
 export const updateCategory = async (req, res, next) => {
-  // * destructure name and oldPublicId from the request body
-  const { name, oldPublicId } = req.body;
+  // * destructure name from the request body
+  const { name } = req.body;
   // * destructure category id from the request params
   const { categoryId } = req.params;
   // * destructure _id from the request authUser
@@ -119,26 +100,6 @@ export const updateCategory = async (req, res, next) => {
     category.slug = slugify(name, "-");
   }
 
-  // * check if user wants to update image
-  if (oldPublicId) {
-    if (!req.file) {
-      return next(new Error(`please enter new image`, { cause: 400 }));
-    }
-
-    const newPublicId = oldPublicId.split(`${category.folderId}/`)[1];
-
-    // * update image and use same public id  and folder id
-    const { secure_url, public_id } =
-      await cloudinaryConnection().uploader.upload(req.file.path, {
-        folder: `${process.env.MAIN_FOLDER}/Categories/${category.folderId}`,
-        public_id: newPublicId,
-      });
-    category.Image.secure_url = secure_url;
-  }
-
-  // * set value for the updatedBy
-  category.updatedBy = _id;
-
   // * save values
   await category.save();
 
@@ -152,7 +113,6 @@ export const updateCategory = async (req, res, next) => {
 /**
  * * destructuring the data from the request body and authUser
  * * check if category exists and delete it
- * * delete the image and folder from cloudinary
  * * success response
  */
 export const deleteCategory = async (req, res, next) => {
@@ -169,25 +129,19 @@ export const deleteCategory = async (req, res, next) => {
     return next(new Error(`Category not found`, { cause: 404 }));
   }
 
-  // * delete the image and folder from cloudinary
-  await cloudinaryConnection().api.delete_resources_by_prefix(
-    `${process.env.MAIN_FOLDER}/Categories/${category.folderId}`
-  );
-  await cloudinaryConnection().api.delete_folder(
-    `${process.env.MAIN_FOLDER}/Categories/${category.folderId}`
-  );
+  await Task.deleteMany({ categoryId });
 
   // * success response
   res.status(200).json({ message: "Category deleted successfully", category });
 };
 
-// ===================================== get all categories ================================//
+// ===================================== get all categories With Pagination And Sort By Category Name ================================//
 /**
  * * get all categories
  * * get all categories
  * * success response
  */
-export const getAllCategories = async (req, res, next) => {
+export const getAllCategories= async (req, res, next) => {
   // * destructuring data from query
   const { page, size, sort, ...search } = req.query;
 

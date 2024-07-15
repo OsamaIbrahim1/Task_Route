@@ -48,7 +48,6 @@ export class APIFeature {
   filter(filters) {
     const queryFilter = JSON.stringify(filters)
     .replace(/gt|gte|lt|lte|regex|ne/g,(operator) => `$${operator}`);
-    console.log(queryFilter);
     this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryFilter));
     return this;
   }

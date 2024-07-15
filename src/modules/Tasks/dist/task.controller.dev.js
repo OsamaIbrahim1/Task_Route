@@ -222,16 +222,39 @@ var updateTask = function updateTask(req, res, next) {
 
           if (status) task.status = status; // * if user want to update the description
 
-          if (task.description) {
-            if (description) task.description = description;
-          } // * if user want to update the listTasks
+          if (!description) {
+            _context3.next = 14;
+            break;
+          }
 
+          task.description = description;
+          _context3.next = 14;
+          return regeneratorRuntime.awrap(_TaskModel["default"].updateOne({
+            _id: task._id
+          }, {
+            $unset: {
+              listTasks: ""
+            }
+          }));
 
-          if (task.listTasks) {
-            if (listTasks) task.listTasks = listTasks;
-          } // * save the updated task
+        case 14:
+          if (!listTasks) {
+            _context3.next = 18;
+            break;
+          }
 
+          task.listTasks = listTasks;
+          _context3.next = 18;
+          return regeneratorRuntime.awrap(_TaskModel["default"].updateOne({
+            _id: task._id
+          }, {
+            $unset: {
+              description: ""
+            }
+          }));
 
+        case 18:
+          // * save the updated task
           task.save(); // * success response
 
           res.status(200).json({
@@ -239,7 +262,7 @@ var updateTask = function updateTask(req, res, next) {
             task: task
           });
 
-        case 14:
+        case 20:
         case "end":
           return _context3.stop();
       }
@@ -360,7 +383,7 @@ var getTaskById = function getTaskById(req, res, next) {
         case 3:
           task = _context6.sent;
 
-          if (!(task.length === 0)) {
+          if (task) {
             _context6.next = 6;
             break;
           }
